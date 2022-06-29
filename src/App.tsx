@@ -1,26 +1,37 @@
 import React from 'react';
-import logo from './logo.svg';
 import './App.css';
+import {Switch, Route} from 'react-router-dom'
+import '@devexpress/dx-react-grid-bootstrap4/dist/dx-react-grid-bootstrap4.css';
+import MainPage from "./components/MainPage/MainPage";
+import FormPage from "./components/FormPage/FormPage";
+import Navigation from "./components/Navigation/Navigation";
+import 'antd/dist/antd.css';
+import '@devexpress/dx-react-grid-bootstrap4/dist/dx-react-grid-bootstrap4.css';
+import {Layout} from 'antd';
 
-function App() {
+const { Header, Content, Footer } = Layout;
+
+const App = () => {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+      <Layout className="layout">
+        <Header>
+          <Navigation/>
+        </Header>
+        <Content style={{ padding: '25px 50px' }}>
+          <div className="site-layout-content">
+            <Switch>
+              <Route path='/main'>
+                <MainPage/>
+              </Route>
+              <Route path='/form'>
+                <FormPage/>
+              </Route>
+            </Switch>
+          </div>
+        </Content>
+        <Footer style={{ textAlign: 'center' }}>©2022 Created by grekova-web</Footer>
+      </Layout>
   );
-}
+};
 
 export default App;

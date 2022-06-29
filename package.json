@@ -3,24 +3,38 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "@testing-library/jest-dom": "^5.16.4",
-    "@testing-library/react": "^13.3.0",
+    "@ant-design/icons": "^4.7.0",
+    "@apollo/client": "^3.5.7",
+    "@devexpress/dx-react-core": "^3.0.3",
+    "@devexpress/dx-react-grid": "^3.0.3",
+    "@devexpress/dx-react-grid-bootstrap4": "^3.0.3",
+    "@testing-library/jest-dom": "^5.16.1",
+    "@testing-library/react": "^12.1.2",
     "@testing-library/user-event": "^13.5.0",
-    "@types/jest": "^27.5.2",
-    "@types/node": "^16.11.41",
-    "@types/react": "^18.0.14",
-    "@types/react-dom": "^18.0.5",
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0",
-    "react-scripts": "5.0.1",
-    "typescript": "^4.7.4",
+    "@types/graphql": "^14.5.0",
+    "@types/jest": "^27.4.0",
+    "@types/node": "^16.11.21",
+    "@types/react": "^17.0.38",
+    "@types/react-dom": "^17.0.11",
+    "antd": "^4.21.3",
+    "apollo": "^2.33.9",
+    "bootstrap": "^5.1.3",
+    "graphql": "^15.8.0",
+    "open-iconic": "^1.1.1",
+    "react": "^17.0.2",
+    "react-dom": "^17.0.2",
+    "react-router-dom": "^5.0.0",
+    "react-scripts": "5.0.0",
+    "typescript": "^4.5.5",
     "web-vitals": "^2.1.4"
   },
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "download-schema": "apollo service:download --endpoint=https://graphql-server-veterinary.herokuapp.com/ graphql-schema.json",
+    "codegen": "npm run download-schema && apollo codegen:generate --localSchemaFile=graphql-schema.json --target=typescript --tagName=gql --globalTypesFile=./src/__generated__/globalTypes.ts"
   },
   "eslintConfig": {
     "extends": [
@@ -39,5 +53,8 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "@types/react-router-dom": "^5.3.3"
   }
 }
