@@ -5,12 +5,10 @@ import {
 } from "@apollo/client";
 import {Space, Spin} from 'antd';
 import {
-    ColumnBands,
     FilteringState,
     IntegratedFiltering,
-    TableColumn,
-    TableRow,
-    RowDetailState, TableRowDetail as TableRowDetailBase, TableTreeColumn
+    IntegratedSorting,
+    SortingState
 } from '@devexpress/dx-react-grid';
 import {
     Grid,
@@ -18,14 +16,13 @@ import {
     TableBandHeader,
     TableHeaderRow,
     TableFilterRow,
-    TableRowDetail
 } from '@devexpress/dx-react-grid-bootstrap4';
 import '@devexpress/dx-react-grid-bootstrap4/dist/dx-react-grid-bootstrap4.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'antd/dist/antd.css';
-import {IntegratedSorting, SortingState} from "@devexpress/dx-react-grid";
+import {GetTableData_animals} from "./__generated__/GetTableData";
 
-const TABLE_DATA = gql`
+export const TABLE_DATA = gql`
     query GetTableData {
         animals {
             id
@@ -44,66 +41,6 @@ const TABLE_DATA = gql`
         }
     }
 `;
-
-interface AnimalData {
-    animals: Animal[]
-}
-
-interface Animal {
-    id: number,
-    name: string,
-    kind: string,
-    age: number,
-    gender: string,
-    caseRecord: string,
-    owner: {
-        id: string,
-        name: string,
-        phone: string,
-        email: string,
-        address: string
-    }
-}
-
-/*
-interface BandCellProps {
-   children: React.ReactNode,
-   tableRow: TableRow,
-   tableColumn: TableColumn,
-   column: ColumnBands
-}
-
-const BandCell = ({children, tableRow, tableColumn, column}: BandCellProps) => {
-   let icon = '';
-   if (column.title === 'Владелец') icon = 'person';
-   return (
-       <TableBandHeader.Cell
-           tableRow={tableRow}
-           tableColumn={tableColumn}
-           column={column}
-           className="text-secondary"
-       >
-           {children}
-           <span
-               className={`ml-2 oi oi-${icon}`}
-           />
-       </TableBandHeader.Cell>
-   );
-};
-
-const HeaderCell = (className: string, ...restProps: any ) => (
-   <TableHeaderRow.Cell
-       {...restProps}
-       className={`text-info ${className}`}
-   />
-);
-
-const RowDetail: React.ComponentType<TableRowDetail.ContentProps> = (row: any) => (
-   <>
-       {row.caseRecord}
-   </>
-);
-*/
 
 const tableColumnExtensions: Table.ColumnExtension[] = [
     {columnName: 'id', width: 60, align: 'center'},
@@ -130,11 +67,11 @@ const columns = [
     {name: "ownerAddress", title: "Адрес"}
 ];
 
+const getRowId = (row: any) => row.id;
 
 const MainPage = () => {
-    const [rows, setRows] = useState<Animal[]>([]);
-    const {loading, data} = useQuery<AnimalData>(TABLE_DATA);
-    console.log(data);
+    const [rows, setRows] = useState([]);
+    const {loading, data} = useQuery(TABLE_DATA, {pollInterval: 500});
 
     const [columnBands] = useState([
         {
@@ -151,7 +88,7 @@ const MainPage = () => {
 
     useEffect(() => {
         if (data) {
-            setRows(data.animals.map(animal => {
+            setRows(data.animals.map((animal: GetTableData_animals) => {
                 return {
                     ...animal,
                     id: Number(animal.id),
@@ -162,33 +99,27 @@ const MainPage = () => {
                     ownerAddress: animal.owner.address
                 }
             }))
-
         }
     }, [data]);
 
     return (
         <div>
             <h1>Наши пациенты</h1>
-            {loading &&
-            <Space>
-                <Spin size="large"/>
-            </Space>}
-            <Grid rows={rows} columns={columns}>
+
+            {loading && <Space> <Spin size="large"/> </Space>}
+
+            <Grid rows={rows} columns={columns} getRowId={getRowId}>
                 <FilteringState defaultFilters={[]}/>
                 <IntegratedFiltering/>
                 <SortingState
                     defaultSorting={[{columnName: 'id', direction: 'asc'}]}
                 />
-                {/*<RowDetailState/>*/}
                 <IntegratedSorting/>
                 <Table columnExtensions={tableColumnExtensions}/>
                 <TableHeaderRow showSortingControls/>
                 <TableBandHeader
                     columnBands={columnBands}
                 />
-                {/*<TableRowDetail*/}
-                {/*    contentComponent={RowDetail}*/}
-                {/*/>*/}
                 <TableFilterRow/>
             </Grid>
         </div>
