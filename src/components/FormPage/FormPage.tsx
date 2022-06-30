@@ -111,7 +111,7 @@ const FormPage = () => {
                     <InputNumber disabled={isSwitchOn}/>
                 </Form.Item>
                 <Form.Item wrapperCol={{span: 14, offset: 4}}>
-                    <Button type='primary' htmlType='submit'>Button</Button>
+                    <Button type='primary' htmlType='submit'>Сохранить</Button>
                 </Form.Item>
             </Form>
         </div>
