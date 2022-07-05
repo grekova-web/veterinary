@@ -11,7 +11,7 @@ import {Layout} from 'antd';
 
 const { Header, Content, Footer } = Layout;
 
-const App = () => {
+const App = (): JSX.Element => {
   return (
       <Layout className="layout">
         <Header>

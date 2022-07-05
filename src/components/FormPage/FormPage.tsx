@@ -13,6 +13,8 @@ import {
 import 'antd/dist/antd.css';
 import {gql, useMutation} from '@apollo/client';
 import {Rule} from "rc-field-form/lib/interface";
+import {UpdateAnimal, UpdateAnimal_updateAnimal, UpdateAnimalVariables} from "./__generated__/UpdateAnimal";
+import {DeleteAnimal, DeleteAnimal_deleteAnimal, DeleteAnimalVariables} from "./__generated__/DeleteAnimal";
 
 const {Text} = Typography;
 const {TextArea} = Input;
@@ -42,26 +44,28 @@ const DELETE_ANIMAL = gql`
   }
 `;
 
-const FormPage = () => {
+const FormPage = (): JSX.Element => {
     const [form] = Form.useForm();
-    const [editData, setEditData] = useState<any>([]);
-    const [isSwitchOn, setIsSwitchOn] = useState(false);
-    const [updateAnimal] = useMutation(UPDATE_ANIMAL);
-    const [deleteAnimal] = useMutation(DELETE_ANIMAL);
+    const [editData, setEditData] = useState<UpdateAnimalVariables>({id: ''});
+    const [isSwitchOn, setIsSwitchOn] = useState<boolean>(false);
+    const [updateAnimal] = useMutation<UpdateAnimal, UpdateAnimalVariables>(UPDATE_ANIMAL);
+    const [deleteAnimal] = useMutation<DeleteAnimal, DeleteAnimalVariables>(DELETE_ANIMAL);
 
-    const showResult = (data: any) => {
-        data.success ?
-            message.success(data.message)
-            : message.error(data.message);
+    const showResult = (data: UpdateAnimal_updateAnimal | DeleteAnimal_deleteAnimal | undefined) => {
+        if (data) {
+            data.success ?
+                message.success(data.message)
+                : message.error(data.message);
+        }
     };
 
     const onFinish = () => {
         !isSwitchOn ?
-            updateAnimal({variables: {...editData}}).then(data => showResult(data.data.updateAnimal))
-            : deleteAnimal({variables: {id: editData.id}}).then(data => showResult(data.data.deleteAnimal))
+            updateAnimal({variables: {...editData}}).then(data => showResult(data ? data?.data?.updateAnimal : undefined))
+            : deleteAnimal({variables: {id: editData.id}}).then(data => showResult(data ? data?.data?.deleteAnimal : undefined))
     };
 
-    const onChangeData = (item: any) => {
+    const onChangeData = (item: Object) => {
         setEditData({
             ...editData,
             ...item

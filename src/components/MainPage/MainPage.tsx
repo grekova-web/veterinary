@@ -69,7 +69,7 @@ const columns = [
 
 const getRowId = (row: any) => row.id;
 
-const MainPage = () => {
+const MainPage = (): JSX.Element => {
     const [rows, setRows] = useState([]);
     const {loading, data} = useQuery(TABLE_DATA, {pollInterval: 500});
 
